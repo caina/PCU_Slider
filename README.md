@@ -1,6 +1,6 @@
 # PCU Slider
 
-Aplicativo PCU slider, dados do projeto, toda e qualquer alteração deve estar descrita neste documento, nada fora do mesmo será implementado. 
+Aplicativo PCU slider, dados do projeto, toda e qualquer alteração deve estar descrita neste documento, nada fora do mesmo será implementado.
 
 
 Os videos poderão ser executados tanto em looping como em formato reprodução única, estes poderão avançar ou voltar com o clique, indiferente da posição que o slide está, reproduzindo ou parado.
@@ -12,10 +12,14 @@ Verificar as letras e palavras reservadas a baixo
 
 Organização de pastas:
 ## content
+
 ### Arquivos Loopáveis
+
 - 1_L.mp4
 - 1_no_audio_L.mp4
+
 ### Arquivos sem Loop
+
 - 1.mp4
 - 1_no_audio.mp4
 
