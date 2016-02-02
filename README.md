@@ -1,6 +1,6 @@
 # PCU Slider
 
-Aplicativo PCU slider, dados do projeto, toda e qualquer alteração deve estar descrita neste documento, nada fora do mesmo será implementado.
+Software de apresentações [Nexo Apresentações](http://nexoapresentacoes.com.br), , dados do projeto, toda e qualquer alteração deve estar descrita neste documento, nada fora do mesmo será implementado.
 
 
 Os videos poderão ser executados tanto em looping como em formato reprodução única, estes poderão avançar ou voltar com o clique, indiferente da posição que o slide está, reproduzindo ou parado.
@@ -39,3 +39,10 @@ Imagem com o nome background.png na raiz, mesmo nível do slider.swf
 
 Caso exista um arquivo com o nome background.mp3, aplicação deverá rodar este áudio até ter um novo arquivo com o mesmo nome do slide na pasta.
 	Background: Poderá ser colocado um arquivo como background.png na raiz da pasta, ela será carregada e colocada como background no inicio da aplicação,
+
+## Créditos
+Código por [Douglas Caina](http://www.douglascaina.com.br)
+
+
+Apresentação e animações: [Nexo Apresentações](http://nexoapresentacoes.com.br)__
+.
