@@ -43,6 +43,4 @@ Caso exista um arquivo com o nome background.mp3, aplicação deverá rodar este
 ## Créditos
 Código por [Douglas Caina](http://www.douglascaina.com.br)
 
-
-Apresentação e animações: [Nexo Apresentações](http://nexoapresentacoes.com.br)__
-.
+Apresentação e animações: [Nexo Apresentações](http://nexoapresentacoes.com.br)
