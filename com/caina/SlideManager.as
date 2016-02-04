@@ -1,4 +1,13 @@
-﻿package com.caina {
+﻿/*
+
+	HANDLE ALL THE VIDEOS FUNCTIONS
+	USING GREENSOCK LIBRARY, WE ARE
+	ABLE TO STREAM LOCAL FILES
+	
+	CLASS UNDER CONSTRUCTIONS
+
+*/
+package com.caina {
 	
 	import flash.filesystem.File;
 	import flash.events.VideoEvent;
@@ -12,6 +21,7 @@
 	import com.greensock.events.LoaderEvent;
 
 	import com.caina.SoundManager;
+	import com.caina.BackgroundContent;
 	
 	public class SlideManager {
 
@@ -27,14 +37,33 @@
 		
 		var executingPosition:int = 1;
 		var videoContainer:VideoLoader;
+		var _background:BackgroundContent;
 		var _sounds = new SoundManager();
 		
 		public function SlideManager(stage) {
 			_stage = stage;
 			loadResources();
+			_background = new BackgroundContent(stage);
 		}
 		
+		public function nextSlide(event:MouseEvent):void{
+			if(!isVideoPlaing){
+				executingPosition++;
+				if(videoFiles[executingPosition] == undefined){
+					executingPosition = videoFiles.length-1;
+				}
+				displayMessage(videoFiles[executingPosition]);
+				playVideo();			
+			}
+		}
 		
+		public function previousSlide(event:MouseEvent):void{
+			videoContainer.pauseVideo();
+			isVideoPlaing = false;
+			_stage.addEventListener(Event.ENTER_FRAME, videoReversePlayBack);
+		}
+		
+		//TODO verificar o THUMBS.mp4
 		function loadResources(){
 			for (var i = 0; i < filesPathDirectoryList.length; i++) {
 				videoFileName = filesPathDirectoryList[i].name.replace("." + filesPathDirectoryList[i].extension, "");
@@ -48,67 +77,10 @@
 				executingPosition++;
 			}
 			executingPosition = 0;
-
-
-			for (var t: Object in videoFiles)
-				displayMessage(t + " : " + videoFiles[t])
-
-
 		}
 		
-		
-		/*
-		Deveria fazer os frames irem de tras pra frente, not going to happen :(
-
-		vou deixar isso pra mais tarde
-		*/
-		var speed:Number = 0.001;
-		var currentVideoTime:Number = 0;
-		function reverseVideo(e:Event):void{
-			displayMessage("rebobinando!");
-			if(videoContainer != null){
-				
-				
-				displayMessage("a: "+videoContainer.videoTime+" d: "+videoContainer.duration + " v: "+(videoContainer.duration - videoContainer.videoTime));	
-				if(videoContainer.duration - videoContainer.videoTime < (videoContainer.duration-0.2)){
-					
-					//currentVideoTime -= speed;
-					videoContainer.videoTime = videoContainer.videoTime - speed;
-					videoContainer.playVideo();
-					videoContainer.pauseVideo();
-				}else{
-					displayMessage("Voltou para "+executingPosition);
-					executingPosition--;
-					isVideoPlaing = false;
-					videoContainer.videoTime = 0.46;
-					//removeEventListener(Event.ENTER_FRAME, reverseVideo);
-				}
-			}
-		}
-		
-		function previousSlideHandle(event:MouseEvent){
-			videoContainer.pauseVideo();
-			//addEventListener(Event.ENTER_FRAME, reverseVideo);
-			if(executingPosition >=1){
-				
-			}
-		}
-
-		function nextSlideHandle(event:MouseEvent){
-			if(!isVideoPlaing){
-				executingPosition++;
-				displayMessage(videoFiles[executingPosition]);
-				if(videoFiles[executingPosition] == undefined){
-					executingPosition = videoFiles.length;
-				}
-				playCurrentVideo();			
-			}
-		}
-
-
-		function playCurrentVideo():void{
+		function playVideo():void{
 			
-			displayMessage("Reproduzindo: "+videoFiles[executingPosition][1]);
 			if(videoContainer !== null){
 				videoContainer.unload();
 				videoContainer.dispose();
@@ -129,10 +101,8 @@
 					scaleMode:"stretch", 
 					smoothing: true,
 					repeat: use_loop,
-					//bgColor:0x000000, 
 					autoPlay:false, 
 					volume:0
-					//requireWithRoot:this.root
 				}
 			);
 					
@@ -144,9 +114,28 @@
 			
 			videoContainer.addEventListener(VideoLoader.VIDEO_COMPLETE,videoCompleteCallBack,false,0,true);
 			videoContainer.addEventListener(VideoLoader.PLAY_PROGRESS , videoProgressCallBack);
-			
 		}
-
+		
+		/**
+			Runs at the enter frame, the idea is stop the current video, and play it backwards
+		
+		tem que voltar dois videos, isso e inviavel n?
+		*/
+		function videoReversePlayBack(event:Event):void{
+			if(videoContainer != null){
+				if(videoContainer.duration - videoContainer.videoTime < videoContainer.duration){
+					
+					videoContainer.gotoVideoTime((videoContainer.videoTime - 0.002));
+					displayMessage(videoContainer.videoTime+" ");
+				}else{
+					_stage.removeEventListener(Event.ENTER_FRAME, videoReversePlayBack);
+				}
+			}
+		}
+		
+		/**
+			CALLBACK HANDLES
+		*/
 		function videoBufferCompleteCallBack(event:LoaderEvent):void {
 			isVideoPlaing = true;
 			//createPrintScreen();
@@ -164,17 +153,19 @@
 			videoContainer.removeEventListener(VideoLoader.VIDEO_COMPLETE,videoCompleteCallBack);
 			videoContainer.removeEventListener(VideoLoader.PLAY_PROGRESS,videoProgressCallBack);
 			
-			//createPrintScreen();
+			_background.takeVideoPrintCreen(videoContainer);
 		}
 
 		function videoProgressCallBack(e:LoaderEvent):void{
 			
 		}
-
-		function displayMessage(message:String):void{
-			trace(message);
+				
+		function ErrorPlayerHandle():void{}
+		
+		private function displayMessage(_message:String){
+			trace(_message);
 		}
-
+		
 	}
 	
 }
