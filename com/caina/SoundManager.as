@@ -53,7 +53,7 @@ package com.caina {
 
 		private function SoundLoadedCallBack(event:Event):void{
 			_localEventSound = event.target as Sound; 
-			_soundChannel = _localEventSound.play(0,999);
+			_soundChannel = _localEventSound.play();
 		}
 		
 		private function playBackground():void{
@@ -63,19 +63,22 @@ package com.caina {
 		}
 		
 		private function getSoundInstance():Sound{
+			stop_sounds();
+			return new Sound();
+		}
+		private function stop_sounds():void{
 			if(_sound != null){
 				_soundChannel.stop();
 				_soundRequest = null;
 				_sound.removeEventListener(Event.COMPLETE, SoundLoadedCallBack); 
 			}
-			return new Sound();
 		}
-		
 		
 		/*
 			Verifica se nao e um slide sem som, se sim, para a reproducao atual
 			Se não, verifica sem existe um audio para aquele slide, se sim, toca
 			Se não, toca o background
+			Caso nao tenha nada para executar e nenhum bg, devemos parar o som
 			@param String do slide
 		*/
 		public function slideSound(slideName:String):void{
@@ -89,6 +92,10 @@ package com.caina {
 					playSound(soundsFile[i][0]);
 					return;
 				}
+			}
+			if(backgroundFilePath == null){
+				stop_sounds();
+				return;
 			}
 			playBackground();
 		}
