@@ -10,6 +10,7 @@ package com.caina {
 	import flash.media.Sound; 
 	import flash.net.URLRequest; 
 	import flash.media.SoundChannel;
+	import flash.media.SoundTransform;
 	
 	public class SoundManager {
 		
@@ -21,6 +22,8 @@ package com.caina {
 		var _soundRequest:URLRequest;
 		var _localEventSound:Sound = null;
 		var _soundChannel:SoundChannel;
+		var _soundChannelPosition;
+		var _soundTransform:SoundTransform;
 		
 		public function SoundManager() {
 			loadResources();
@@ -28,6 +31,9 @@ package com.caina {
 		
 		function loadResources(){
 			for (var i = 0; i < filesPathDirectoryList.length; i++) {
+				if(filesPathDirectoryList[i].extension != 'mp3'){
+					continue;
+				}
 				var fileName = filesPathDirectoryList[i].name.replace("." + filesPathDirectoryList[i].extension, "");
 				if(fileName == 'background'){
 					backgroundFilePath = "sound/"+fileName+"."+filesPathDirectoryList[1].extension;
@@ -53,7 +59,8 @@ package com.caina {
 
 		private function SoundLoadedCallBack(event:Event):void{
 			_localEventSound = event.target as Sound; 
-			_soundChannel = _localEventSound.play();
+			var loop = (_localEventSound.url.search("background")>0)?99:0;
+			_soundChannel = _localEventSound.play(0,loop);
 		}
 		
 		private function playBackground():void{
@@ -71,6 +78,20 @@ package com.caina {
 				_soundChannel.stop();
 				_soundRequest = null;
 				_sound.removeEventListener(Event.COMPLETE, SoundLoadedCallBack); 
+			}
+		}
+		
+		/*
+		inicia e para o som
+		se enviar 1, para o audio, se não, reproduz
+		*/		
+		public function toggle_stop_sound(operation:int):void{
+			if(_sound != null){
+				if(operation == 1){
+					_soundChannel.soundTransform = new SoundTransform(0);
+				}else{
+					_soundChannel.soundTransform = new SoundTransform(1);
+				}
 			}
 		}
 		

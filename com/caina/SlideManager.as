@@ -25,6 +25,9 @@ package com.caina {
 	import flash.geom.Rectangle;
 	import flash.media.StageWebView;
 	import fl.transitions.Wipe;
+	import flash.utils.setTimeout;
+	import flash.display.MovieClip;
+	import flash.display.DisplayObject;
 	
 	public class SlideManager {
 
@@ -50,13 +53,20 @@ package com.caina {
 		}
 		
 		public function forceNextSlide(event:MouseEvent):void{
-			trace("piroca voadora");
-			_play_action();
+			if(isVideoPlaing){
+				_background.takeVideoPrintCreen(videoContainer);
+				pauseVideo();			
+				_next();
+			}
 		}
 		
-		public function nextSlide(event:MouseEvent):void{
+		public function toggle_sounds(operation:int):void{
+			_sounds.toggle_stop_sound(operation);
+		}
+		
+		public function nextSlide(event:Event):void{
 			if(!isVideoPlaing){
-				_play_action();		
+				_next();
 			}
 		}
 		
@@ -69,7 +79,7 @@ package com.caina {
 			playVideo();
 		}
 		
-		public function previousSlide(event:MouseEvent):void{
+		public function previousSlide(event:Event):void{
 			//pauseVideo();
 			isVideoPlaing = false;
 			executingPosition--;
@@ -79,25 +89,26 @@ package com.caina {
 			playVideo();
 		}
 		
-		//TODO verificar o THUMBS.mp4
 		function loadResources(){
 			for (var i = 0; i < filesPathDirectoryList.length; i++) {
-				videoFileName = filesPathDirectoryList[i].name.replace("." + filesPathDirectoryList[i].extension, "");
-				if(videoFileName != 'Thumbs'){
-					videoFile = new Array();
-					videoFile[0] = executingPosition;
-					videoFile[1] = "content/"+videoFileName+"."+filesPathDirectoryList[1].extension;//files[i].nativePath;
-					videoFile[2] = (videoFileName.indexOf("L") >= 0);
-					videoFile[3] = videoFileName;
-					videoFiles[executingPosition] = videoFile;
-					executingPosition++;
+				if(filesPathDirectoryList[i].extension != 'mp4'){
+					continue;
 				}
+				
+				videoFileName = filesPathDirectoryList[i].name.replace("." + filesPathDirectoryList[i].extension, "");
+				videoFile = new Array();
+				videoFile[0] = executingPosition;
+				videoFile[1] = "content/"+videoFileName+"."+filesPathDirectoryList[1].extension;//files[i].nativePath;
+				videoFile[2] = (videoFileName.indexOf("L") >= 0);
+				videoFile[3] = videoFileName;
+				videoFiles[executingPosition] = videoFile;
+				executingPosition++;
 			}
 			executingPosition = 0;
 		}
 		
 		function playVideo():void{
-		
+			
 			if(videoFiles[executingPosition] === undefined){
 				return;
 			}
@@ -120,7 +131,7 @@ package com.caina {
 					width:_stage.stageWidth,
 					height:_stage.stageHeight,
 					smoothing: true,
-					crop:false,
+					//scaleMode:"heightOnly",
 					vAlign:'left',
 					hAlign:'left',
 					x:0,
@@ -196,6 +207,11 @@ package com.caina {
 				videoContainer.pauseVideo();
 			}
 		}
+		
+		public function _next():void{
+			setTimeout(_play_action, 200);
+		}
+		
 	}
 	
 }

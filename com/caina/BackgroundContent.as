@@ -35,6 +35,10 @@
 			trace("Background not found");
 		}
 		
+		/**
+		Remove a imagem que foi definida como background
+		NAO a imagem printada
+		*/
 		private function removeBackgroundImage(){
 			if(_background_image != null){
 				_stage.removeChild(_background_image);
@@ -46,13 +50,18 @@
 			pass just a bitmap, but it wont work, if i figure out how to make it i impruve this method
 		*/
 		function takeVideoPrintCreen(imageRaw:VideoLoader):void{
+			if(imageRaw == null) return;
 			if(screenShotVideobitmap == null){
 				screenShotVideobitmap = new Bitmap(screenShotVideobitmapData = new BitmapData(_stage.width, _stage.height, false, 0x00FFFFFF), "auto", true);
 				_stage.addChildAt(screenShotVideobitmap, 0);
 			}
 			removeBackgroundImage();
-			screenShotVideobitmapData.draw(imageRaw.rawContent);
-			trace("Background Alterado");
+			trace("printado");
+			try{
+				screenShotVideobitmapData.draw(imageRaw.rawContent);
+			}catch(e:Error){
+				trace("print deu erro"+e.message);
+			}
 		}
 		
 		function drawBackground():void{
